@@ -1,5 +1,3 @@
-import Two from "./two"
-
 class Rail {
     constructor(p1, p2, two) {
         this.p1 = p1
@@ -11,4 +9,4 @@ class Rail {
     }
 }
 
-export {Rail}
+export default Rail
