@@ -18,7 +18,8 @@ screen.addEventListener("mousedown", mousedown)
 let down = new Two.Vector(0, 0)
 let up = new Two.Vector(0, 0)
 
-let md = false
+let keydown = false
+let mousepos = new Two.Vector(0, 0)
 
 let rails = []
 let cars = []
@@ -31,17 +32,21 @@ function update(frame, dt) {
     for (let i = 0; index < cars.length; i++) {
         const car = cars[i];
 
+
     }
 }
 
 function mousemove(event) {
-
+    mousepos.set(
+        event.clientX-screen.getBoundingClientRect().left, 
+        event.clientY-screen.getBoundingClientRect().top
+    )
 }
 
 function mousedown(event) {
-    md = true
+    keydown = true
 }
 
 function mouseup(event) {
-    md = false
+    keydown = false
 }

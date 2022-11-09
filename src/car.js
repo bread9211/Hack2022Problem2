@@ -3,7 +3,7 @@ function degToRad(d) {
 }
 
 class Car {
-    constructor(pos, mass, two) {
+    constructor(pos, mass, callback, two) {
         this.pos = pos
         this.rot = 0
         this.vel = new Two.Vector(0, 0)
@@ -17,6 +17,8 @@ class Car {
         this.railLength
         this.railTraversed = 0
 
+        this.callback = callback
+
         this.screenElement = two.makeRectangle(pos.x, pos.y, 15, 10)
         this.two = two
     }
@@ -26,11 +28,9 @@ class Car {
         // Kinetic energy: K = 1/2 * mass * velocity^2
         // Velocity from KE: velocity = sqrt( 2K / mass )
 
-        let element = this.screenElement
+        this.rail = rail
 
-        this.rot = rail.screenElement.rotation
-        let degAboveHorizontal = (this.rot+90)*-1
-        let direction = (new Two.Vector(1, 0)).rotate(degToRad(degAboveHorizontal))
+        let element = this.screenElement
 
         this.pe = this.mass * 9.8 * this.pos.y
         if (this.maxPE < this.pe) {this.maxPE = this.pe}
@@ -41,6 +41,24 @@ class Car {
         
         this.vel -= 4.9 * dt**2
         this.vel *= 0.98
+
+        this.railLength = Two.Vector.distanceBetween(this.rail.p1, this.rail.p2)
+        this.railTraversed += this.vel
+
+        if (this.railTraversed >= this.railLength) {
+            this.rail = this.rail.r2
+
+            if (this.rail) {
+                this.railLength = Two.Vector.distanceBetween(this.rail.p1, this.rail.p2)
+                this.railTraversed = this.vel
+            }
+
+            this.rot = this.rail.screenElement.rotation
+        }
+
+        this.rot = this.rail.screenElement.rotation
+        let degAboveHorizontal = (this.rot+90)*-1
+        let direction = (new Two.Vector(1, 0)).rotate(degToRad(degAboveHorizontal))
 
         this.pos = this.pos.add(direction.multiplyScalar(this.vel))
 
