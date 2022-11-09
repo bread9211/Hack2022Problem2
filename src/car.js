@@ -13,6 +13,10 @@ class Car {
         this.maxPE = this.pe
         this.mass = mass
 
+        this.rail
+        this.railLength
+        this.railTraversed = 0
+
         this.screenElement = two.makeRectangle(pos.x, pos.y, 15, 10)
         this.two = two
     }

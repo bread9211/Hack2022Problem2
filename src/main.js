@@ -1,5 +1,6 @@
 import Rail from "./rail.js"
 import Car from "./car.js"
+import Two from "./two.js"
 
 const two = new Two({
     fullscreen : true,
@@ -10,7 +11,14 @@ const screen = two.renderer.domElement
 two.bind('resize', resize)
 two.bind('update', update)
 
-screen.addEventListener("click", onclick)
+screen.addEventListener("mouseup", mouseup)
+screen.addEventListener("mousemove", mousemove)
+screen.addEventListener("mousedown", mousedown)
+
+let down = new Two.Vector(0, 0)
+let up = new Two.Vector(0, 0)
+
+let md = false
 
 let rails = []
 let cars = []
@@ -20,15 +28,20 @@ function resize() {
 }
 
 function update(frame, dt) {
-    
+    for (let i = 0; index < cars.length; i++) {
+        const car = cars[i];
+
+    }
 }
 
-function onclick(event) {
-    let car = new Car(
-        new Two.Vector(
-            event.clientX-screen.getBoundingClientRect().left, 
-            event.clientY-screen.getBoundingClientRect().top
-        ), 
-        two
-    )
+function mousemove(event) {
+
+}
+
+function mousedown(event) {
+    md = true
+}
+
+function mouseup(event) {
+    md = false
 }
