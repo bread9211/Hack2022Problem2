@@ -3,7 +3,7 @@ function degToRad(d) {
 }
 
 class Car {
-    constructor(pos, mass, callback, two) {
+    constructor(pos, mass, rail, two) {
         this.pos = pos
         this.rot = 0
         this.vel = new Two.Vector(0, 0)
@@ -17,18 +17,16 @@ class Car {
         this.railLength
         this.railTraversed = 0
 
-        this.callback = callback
+        this.rail = rail
 
         this.screenElement = two.makeRectangle(pos.x, pos.y, 15, 10)
         this.two = two
     }
 
-    draw(rail, dt) {
+    draw(dt) {
         // Potential energy: U = mass * 9.8 * height
         // Kinetic energy: K = 1/2 * mass * velocity^2
         // Velocity from KE: velocity = sqrt( 2K / mass )
-
-        this.rail = rail
 
         let element = this.screenElement
 

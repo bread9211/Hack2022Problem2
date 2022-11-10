@@ -1,6 +1,5 @@
 import Rail from "./rail.js"
 import Car from "./car.js"
-import Two from "./two.js"
 
 const two = new Two({
     fullscreen : true,
@@ -24,16 +23,25 @@ let mousepos = new Two.Vector(0, 0)
 let rails = []
 let cars = []
 
+let startRail = new Rail(
+    new Two.Vector(10, 100),
+    new Two.Vector(100, 100),
+    null, null,
+    two
+)
+
 function resize() {
     two.scene.position.set(0, 0)
 }
 
 function update(frame, dt) {
-    for (let i = 0; index < cars.length; i++) {
-        const car = cars[i];
+    cars.forEach(element => {
+        element.draw(dt)
+    });
 
-
-    }
+    rails.forEach(element => {
+        element.draw()
+    });
 }
 
 function mousemove(event) {
@@ -45,8 +53,22 @@ function mousemove(event) {
 
 function mousedown(event) {
     keydown = true
+    down.copy(mousepos)
+
+    rails.push(
+        new Rail(
+            down.clone(), 
+            mousepos,
+            rails[0] ? rails[0] : startRail,
+            null,
+            two
+        )
+    )
 }
 
 function mouseup(event) {
     keydown = false
+    up.copy(mousepos)
+
+    rails[rails.length-1].p2 = up.clone()
 }

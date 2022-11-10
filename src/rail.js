@@ -1,14 +1,26 @@
+function degToRad(d) {
+    return d * Math.PI/180
+}
+
 class Rail {
     constructor(p1, p2, r1, r2, two) {
         this.p1 = p1
         this.p2 = p2
         this.r1 = r1
         this.r2 = r2
-        r1.r2 = this
+        if (r1) { r1.r2 = this }
 
-        this.screenElement = new Two.Rectangle(p1.x, p1,y, Two.Vector.distanceBetween(p1, p2), 25)
+        let position = new Two.Vector((p1.x+p2.x) / 2, (p1.y+p2.y) / 2)
+        this.screenElement = new Two.Rectangle(position.x, position.y, Two.Vector.distanceBetween(p1, p2), 10)
+        this.screenElement.rotation = Math.atan((p2.y-p1.y) / (p2.x-p1.x))
         this.two = two
         two.add(this.screenElement)
+    }
+
+    draw() {
+        this.screenElement.position = new Two.Vector((this.p1.x+this.p2.x) / 2, (this.p1.y+this.p2.y) / 2)
+        this.screenElement.width = Two.Vector.distanceBetween(this.p1, this.p2)
+        this.screenElement.rotation = Math.atan((this.p2.y-this.p1.y) / (this.p2.x-this.p1.x))
     }
 }
 
