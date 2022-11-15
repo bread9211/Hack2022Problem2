@@ -3,7 +3,7 @@ function degToRad(d) {
 }
 
 class Car {
-    constructor(pos, mass, rail, two) {
+    constructor(pos, mass, rail) {
         this.pos = pos
         this.rot = 0
         this.vel = new Two.Vector(0, 0)
@@ -19,8 +19,7 @@ class Car {
 
         this.rail = rail
 
-        this.screenElement = two.makeRectangle(pos.x, pos.y, 15, 10)
-        this.two = two
+        
     }
 
     draw(dt) {
@@ -42,17 +41,6 @@ class Car {
 
         this.railLength = Two.Vector.distanceBetween(this.rail.p1, this.rail.p2)
         this.railTraversed += this.vel
-
-        if (this.railTraversed >= this.railLength) {
-            this.rail = this.rail.r2
-
-            if (this.rail) {
-                this.railLength = Two.Vector.distanceBetween(this.rail.p1, this.rail.p2)
-                this.railTraversed = this.vel
-            }
-
-            this.rot = this.rail.screenElement.rotation
-        }
 
         this.rot = this.rail.screenElement.rotation
         let degAboveHorizontal = (this.rot+90)*-1
