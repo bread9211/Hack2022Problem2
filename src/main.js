@@ -1,89 +1,38 @@
-import Rail from "./rail.js"
-import Car from "./car.js"
+import * as PIXI from "./pixi.js"
 
-screen.addEventListener("mouseup", mouseup)
-screen.addEventListener("mousemove", mousemove)
-screen.addEventListener("mousedown", mousedown)
-
-let app = new PIXI.Application({
-
-})
-documen.body.appendChild(app.view)
+let app = new PIXI.Application()
 let stage = app.stage
 
-let down = new Two.Vector(0, 0)
-let up = new Two.Vector(0, 0)
+document.appendChild(app.view)
 
-let keydown = false
-let mousepos = new Two.Vector(0, 0)
+class Rail {
+    constructor(x1, y1, x2, y2) {
+        this.x1 = x1
+        this.y1 = y1
+        this.x2 = x2
+        this.y2 = y2
 
-let rails = []
-let cars = []
+        let xdiff = this.x2-this.x1
+        let ydiff = this.y2-this.y1
+        this.length = Math.sqrt((xdiff)^2 + (ydiff)^2)
+        this.rotation = Math.atan(xdiff/ydiff)+90
 
-function resize() {
-    two.scene.position.set(0, 0)
-}
-
-function update(frame, dt) {
-    cars.forEach(element => {
-        element.draw(dt)
-    });
-
-    rails.forEach(element => {
-        element.draw()
-    });
-
-    paths = document.querySelectorAll("path")
-}
-
-function mousemove(event) {
-    mousepos.set(
-        event.clientX-screen.getBoundingClientRect().left, 
-        event.clientY-screen.getBoundingClientRect().top
-    )
-}
-
-function mousedown(event) {
-    keydown = true
-    down.copy(mousepos)
-
-    let newRail = new Rail(
-        down.clone(), 
-        mousepos,
-        rails[0] ? rails[0] : startRail,
-        null
-    )
-    rails.push(newRail)
-}
-
-function mouseup(event) {
-    keydown = false
-    up.copy(mousepos)
-
-    rails[rails.length-1].p2 = up.clone()
-}
-
-const targetNode = document.getElementById('two-0');
-const config = { attributes: true, childList: true, subtree: true };
-
-const observer = new MutationObserver((mutationList, observer) => {
-    for (const mutation of mutationList) {
-        if (mutation.type === 'childList') {
-            console.log('A child node has been added or removed.');
-
-            mutation.addedNodes.forEach(element => {
-                if (element.dispatchEvent.length > 10) {
-                    element.setAttribute("mouseon", "false")
-                    element.addEventListener("mouseover", (event) => {
-                        element.setAttribute("mouseon", "true")
-                    })
-                    element.addEventListener("mouseout", (event) => {
-                        element.setAttribute("mouseon", "false")
-                    })
-                }
-            })
-        }
+        let sprite = PIXI.Sprite.from(PIXI.Texture.WHITE) // placeholder image
+        sprite.width = this.length
+        sprite.height = 10
+        sprite.angle = this.rotation
+        sprite.tint = 0x555555
+        stage.addChild(sprite)
+        this.sprite = sprite
     }
-})
 
-observer.observe(targetNode, config)
+    draw() {
+        let xdiff = this.x2-this.x1
+        let ydiff = this.y2-this.y1
+        this.length = Math.sqrt((xdiff)^2 + (ydiff)^2)
+        this.rotation = Math.atan(xdiff/ydiff)+90
+        this.sprite.x = this.x1-this.length/2
+        this.sprite.y = this.y1-5
+        this.sprite.angle = this.rotation
+    }
+}
