@@ -1,38 +1,90 @@
-import * as PIXI from "./pixi.js"
+import Rail from "./rail.js"
+import Car from "./car.js"
 
-let app = new PIXI.Application()
-let stage = app.stage
+const two = new Two({
+    fullscreen : true,
+    autostart : true,
+}).appendTo(document.body)
+const screen = two.renderer.domElement
 
-document.appendChild(app.view)
+two.bind('resize', resize)
+two.bind('update', update)
 
-class Rail {
-    constructor(x1, y1, x2, y2) {
-        this.x1 = x1
-        this.y1 = y1
-        this.x2 = x2
-        this.y2 = y2
+screen.addEventListener("mouseup", mouseup)
+screen.addEventListener("mousemove", mousemove)
+screen.addEventListener("mousedown", mousedown)
+screen.addEventListener("mouseleave", end)
 
-        let xdiff = this.x2-this.x1
-        let ydiff = this.y2-this.y1
-        this.length = Math.sqrt((xdiff)^2 + (ydiff)^2)
-        this.rotation = Math.atan(xdiff/ydiff)+90
+let mouseEnterEvent = window.event = new CustomEvent("mouse")
+screen.addEventListener("mouse", mouse)
 
-        let sprite = PIXI.Sprite.from(PIXI.Texture.WHITE) // placeholder image
-        sprite.width = this.length
-        sprite.height = 10
-        sprite.angle = this.rotation
-        sprite.tint = 0x555555
-        stage.addChild(sprite)
-        this.sprite = sprite
-    }
+let down = new Two.Vector(0, 0)
+let up = new Two.Vector(0, 0)
 
-    draw() {
-        let xdiff = this.x2-this.x1
-        let ydiff = this.y2-this.y1
-        this.length = Math.sqrt((xdiff)^2 + (ydiff)^2)
-        this.rotation = Math.atan(xdiff/ydiff)+90
-        this.sprite.x = this.x1-this.length/2
-        this.sprite.y = this.y1-5
-        this.sprite.angle = this.rotation
-    }
+let keydown = false
+let mousepos = new Two.Vector(0, 0)
+
+let rails = []
+let cars = []
+
+let startRail = new Rail(
+    new Two.Vector(10, 100),
+    new Two.Vector(100, 100),
+    null, null,
+    two
+)
+rails.push(startRail)
+
+function resize() {
+    two.scene.position.set(0, 0)
+}
+
+function update(frame, dt) {
+    cars.forEach(element => {
+        element.draw(dt)
+    });
+
+    rails.forEach(element => {
+        element.draw()
+    });
+}
+
+function mousemove(event) {
+    mousepos.set(
+        event.clientX-screen.getBoundingClientRect().left, 
+        event.clientY-screen.getBoundingClientRect().top
+    )
+}
+
+function mousedown(event) {
+    keydown = true
+    down.copy(mousepos)
+
+    rails.push(
+        new Rail(
+            down.clone(), 
+            mousepos,
+            rails[0] ? rails[0] : startRail,
+            null,
+            two
+        )
+    )
+}
+
+function mouseup(event) {
+    keydown = false
+    up.copy(mousepos)
+
+    rails[rails.length-1].p2 = up.clone()
+}
+
+function end(event) {
+    keydown = false
+    up.copy(mousepos)
+
+    return rails.pop()
+}
+
+function mouse() {
+    
 }
