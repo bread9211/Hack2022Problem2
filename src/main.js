@@ -15,25 +15,24 @@ screen.addEventListener("mousemove", mousemove)
 screen.addEventListener("mousedown", mousedown)
 screen.addEventListener("mouseleave", end)
 
-let mouseEnterEvent = window.event = new CustomEvent("mouse")
-screen.addEventListener("mouse", mouse)
-
-let down = new Two.Vector(0, 0)
-let up = new Two.Vector(0, 0)
-
 let keydown = false
 let mousepos = new Two.Vector(0, 0)
 
 let rails = []
 let cars = []
 
+let target = window.target = false
+let targetType = window.targetType = ""
+
 let startRail = new Rail(
     new Two.Vector(10, 100),
-    new Two.Vector(100, 100),
-    null, null,
+    new Two.Vector(100, 150),
+    undefined, undefined,
     two
 )
 rails.push(startRail)
+
+let car = new Car()
 
 function resize() {
     two.scene.position.set(0, 0)
@@ -57,34 +56,35 @@ function mousemove(event) {
 }
 
 function mousedown(event) {
+    console.log(window.target, window.targetType)
+    if (!window.target) { return }
     keydown = true
-    down.copy(mousepos)
 
-    rails.push(
-        new Rail(
-            down.clone(), 
-            mousepos,
-            rails[0] ? rails[0] : startRail,
-            null,
-            two
-        )
+    let newRail = new Rail(
+        window.target["p" + window.targetType[1]], 
+        mousepos,
+        window.target,
+        undefined,
+        two
     )
+    console.log(newRail)
+    window.target[window.targetType] = newRail
+    rails.push(newRail)
+
+    window.target = false
+    window.targetType = ""
 }
 
 function mouseup(event) {
-    keydown = false
-    up.copy(mousepos)
+    if (keydown) {
+        rails[rails.length-1].p2 = mousepos.clone()
+    }
 
-    rails[rails.length-1].p2 = up.clone()
+    keydown = false
 }
 
 function end(event) {
     keydown = false
-    up.copy(mousepos)
 
     return rails.pop()
-}
-
-function mouse() {
-    
 }
