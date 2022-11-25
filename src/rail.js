@@ -37,7 +37,7 @@ class Rail {
 
         this.two = two
 
-        setTimeout(() => { this.init() }, 1000)
+        this.init()
 
         two.add(this.screenElement)
         two.add(this.handle1)
@@ -51,55 +51,66 @@ class Rail {
         if (this.r1) { this.removeHandle(1) }
         if (this.r2) { this.removeHandle(2) }
 
-        this.screenElement.renderer.elem.addEventListener("mouseenter", (event) => {
-            this.mouseOn = true 
-            console.log("mouseenter")
-        })
-
-        this.screenElement.renderer.elem.addEventListener("mouseleave", (event) => {
-            this.mouseOn = false
-            console.log("mouseleave")
-        })
-
-        if (this.handle1) {
-            this.handle1.renderer.elem.addEventListener("mouseenter", (event) => {
-                this.mouseOnHandle1 = true
-
-                window.target = this
-                window.targetType = "r1"
-
-                console.log("mouseenter handle1")
-            })
-
-            this.handle1.renderer.elem.addEventListener("mouseleave", (event) => {
-                this.mouseOnHandle1 = false
-
-                window.target = false
-                window.targetType = ""
-
-                console.log("mouseleave handle1")
-            })
+        function wait(resolve, reject) {
+            console.log(this)
+            if (this.screenElement.renderer?.elem !== undefined) {
+                resolve()
+            } else {
+                setTimeout(wait.bind(this, resolve, reject), 30)
+            }
         }
 
-        if (this.handle2) {
-            this.handle2.renderer.elem.addEventListener("mouseenter", (event) => {
-                this.mouseOnHandle2 = true
-
-                window.target = this
-                window.targetType = "r2"
-
-                console.log("mouseenter handle2")
+        new Promise(wait.bind(this)).then(() => {
+            this.screenElement.renderer.elem.addEventListener("mouseenter", (event) => {
+                this.mouseOn = true 
+                console.log("mouseenter")
             })
 
-            this.handle2.renderer.elem.addEventListener("mouseleave", (event) => {
-                this.mouseOnHandle2 = false
-
-                window.target = false
-                window.targetType = ""
-
-                console.log("mouseleave handle2")
+            this.screenElement.renderer.elem.addEventListener("mouseleave", (event) => {
+                this.mouseOn = false
+                console.log("mouseleave")
             })
-        }
+
+            if (this.handle1) {
+                this.handle1.renderer.elem.addEventListener("mouseenter", (event) => {
+                    this.mouseOnHandle1 = true
+
+                    window.target = this
+                    window.targetType = "r1"
+
+                    console.log("mouseenter handle1")
+                })
+
+                this.handle1.renderer.elem.addEventListener("mouseleave", (event) => {
+                    this.mouseOnHandle1 = false
+
+                    window.target = false
+                    window.targetType = ""
+
+                    console.log("mouseleave handle1")
+                })
+            }
+
+            if (this.handle2) {
+                this.handle2.renderer.elem.addEventListener("mouseenter", (event) => {
+                    this.mouseOnHandle2 = true
+
+                    window.target = this
+                    window.targetType = "r2"
+
+                    console.log("mouseenter handle2")
+                })
+
+                this.handle2.renderer.elem.addEventListener("mouseleave", (event) => {
+                    this.mouseOnHandle2 = false
+
+                    window.target = false
+                    window.targetType = ""
+
+                    console.log("mouseleave handle2")
+                })
+            }
+        })
     }
 
     draw() {

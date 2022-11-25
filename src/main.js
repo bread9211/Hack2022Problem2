@@ -21,8 +21,10 @@ let mousepos = new Two.Vector(0, 0)
 let rails = []
 let cars = []
 
-let target = window.target = false
-let targetType = window.targetType = ""
+window.target = false
+window.targetType = ""
+
+let carDT
 
 let startRail = new Rail(
     new Two.Vector(10, 100),
@@ -32,16 +34,22 @@ let startRail = new Rail(
 )
 rails.push(startRail)
 
-let car = new Car()
+let car = new Car(
+    new Two.Vector(10, 100), 
+    10,
+    startRail,
+    two
+)
+setTimeout(() => {
+    cars.push(car)
+}, 10000)
 
 function resize() {
     two.scene.position.set(0, 0)
 }
 
 function update(frame, dt) {
-    cars.forEach(element => {
-        element.draw(dt)
-    });
+    carDT = dt
 
     rails.forEach(element => {
         element.draw()
@@ -56,8 +64,13 @@ function mousemove(event) {
 }
 
 function mousedown(event) {
-    console.log(window.target, window.targetType)
-    if (!window.target) { return }
+    if (!window.target) {
+        cars.forEach(element => {
+            element.draw(carDT)
+        })
+
+        return
+    }
     keydown = true
 
     let newRail = new Rail(
@@ -70,6 +83,7 @@ function mousedown(event) {
     console.log(newRail)
     window.target[window.targetType] = newRail
     rails.push(newRail)
+    console.log(window.target[window.targetType] === newRail)
 
     window.target = false
     window.targetType = ""
@@ -78,13 +92,16 @@ function mousedown(event) {
 function mouseup(event) {
     if (keydown) {
         rails[rails.length-1].p2 = mousepos.clone()
+        
     }
 
     keydown = false
 }
 
 function end(event) {
-    keydown = false
+    if (keydown) {
+        rails[rails.length-1].p2 = mousepos.clone()
+    }
 
-    return rails.pop()
+    keydown = false
 }
