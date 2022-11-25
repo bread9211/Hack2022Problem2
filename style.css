@@ -1,17 +1,40 @@
-body, html {
-    overflow: hidden;
-    margin: 0%;
-    padding: 0%;
-    
-    width: 100%;
+html, body {
     height: 100%;
-}
+    width: 100%;
+  }
 
-#canvas {
-    width: 75%;
-    height: 50%;
+  #gravity {
+    margin-top: 10px;
+  }
+  
+  #submit {
+    margin-bottom: 10px;
+  }
 
-    border: 1px;
-    border-color: black;
-    border-style: solid;
-}
+  .input {
+    border-radius: 3px;
+    margin-top: 3px;
+  }
+  
+  #ground {
+    width: 100%;
+    position: relative;
+    bottom: 100px;
+  }
+  
+  #ramp {
+    height: 500px;
+    position: relative;
+    left: 285px;
+    bottom: 100px;
+  }
+  
+  #canvas {
+    height: 75px;
+    position: absolute;
+    top: 220px;
+    left: 365px;
+    transform: rotate(64.25deg);
+  }
+
+  

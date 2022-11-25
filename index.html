@@ -1,28 +1,26 @@
+{% load static %}
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="/style.css">
-
-        <script src="/src/matter.js"></script>
-        <script src="/src/pixi.js"></script>
-        <script src="/src/vector.js"></script>
+        <title>Roller Coaster Simluation</title>
+        <link href="{% static 'rollerCoaster/style.css'%}" rel="stylesheet">
+        <script src = "{% static 'rollerCoaster/script.js' %}"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
-        <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-        <div id="canvas"></div>
-        
-        <script src="/src/main.js" type="module" async defer></script>
+        <div style="margin: 10px;">
+            <form id = "inputs">
+                Gravity: <input type = "number" placeholder = "Gravity (m/s^2) (default = 9.8)" style="width: 300px" class="input" id="gravity"> <br>
+                Velocity: <input type = "number" placeholder = "Velocity (m/s) (default = 3)" id= "velocity" style="width: 300px" class="input"> <br>
+                Mass: <input type = "number" placeholder = "Mass (kg) (default = 1)" id= "mass" style="width: 300px" class="input"> <br>
+                <input type="submit" id="submit" class="btn btn-primary input">
+            </form>
+            <button id="pause" class="btn btn-danger" value="Pause">Pause</button> <br> <br>
+            <button id="restart" class="btn btn-danger">Restart</button>
+        </div>
+        <img src="{% static 'rollerCoaster/rail.png' %}" alt = "Gray Curve" id="ramp">
+        <canvas id="canvas"></canvas>
+       
+        <img src="{% static 'rollerCoaster/ground.png' %}" alt = "Brown Rail" id = "ground">
     </body>
 </html>
