@@ -1,111 +1,108 @@
 import Rail from "./rail.js"
-import Car from "./car.js"
 
-const two = new Two({
-    fullscreen : true,
-    autostart : true,
-}).appendTo(document.body)
-const screen = two.renderer.domElement
+let div = document.getElementById("canvas")
+let app = window.app = new PIXI.Application({
+    autoStart : true,
+    background : 0xffffff,
+    resizeTo : canvas
+})
+div.appendChild(app.view);
 
-two.bind('resize', resize)
-two.bind('update', update)
-
-screen.addEventListener("mouseup", mouseup)
-screen.addEventListener("mousemove", mousemove)
-screen.addEventListener("mousedown", mousedown)
-screen.addEventListener("mouseleave", end)
-
-let keydown = false
-let mousepos = new Two.Vector(0, 0)
+let mousepos = new PIXI.Vector()
 
 let rails = []
-let cars = []
 
-window.target = false
-window.targetType = ""
+let targetRail
 
-let carDT
+function createRail(p1, p2, r1, r2) {
+    let newRail = new Rail(p1, p2, r1, r2)
+    targetRail = newRail
 
-let startRail = new Rail(
-    new Two.Vector(10, 100),
-    new Two.Vector(100, 150),
-    undefined, undefined,
-    two
-)
-rails.push(startRail)
+    rails.push(newRail)
 
-let car = new Car(
-    new Two.Vector(10, 100), 
-    10,
-    startRail,
-    two
-)
-setTimeout(() => {
-    cars.push(car)
-}, 5000)
+    newRail.sprite.on("mousedown", (event) => {
+        let target
 
-function resize() {
-    two.scene.position.set(0, 0)
-}
+        let eventPos = new PIXI.Vector(event.x, event.y)
 
-function update(frame, dt) {
-    carDT = dt
+        if (newRail.p1.distanceTo(eventPos) <= 5) {
+            target = "1"
+        }
 
-    cars.forEach(element => {
-        element.draw(carDT)
+        if (newRail.p2.distanceTo(eventPos) <= 5) {
+            target = "2"
+        }
+        newRail[`r${target}`] = createRail(
+            newRail[`p${target}`],
+            mousepos,
+            newRail,
+            undefined
+        )
     })
 
+    newRail.sprite.railLeft.on("mousedown", (event) => {
+        let target
+
+        let eventPos = new PIXI.Vector(event.x, event.y)
+
+        if (newRail.p1.distanceTo(eventPos) <= 5) {
+            target = "1"
+        }
+
+        if (newRail.p2.distanceTo(eventPos) <= 5) {
+            target = "2"
+        }
+        console.log(`p${target}`)
+        newRail[`r${target}`] = createRail(
+            newRail[`p${target}`],
+            mousepos,
+            newRail,
+            undefined
+        )
+    })
+
+    newRail.sprite.railRight.on("mousedown", (event) => {
+        let target
+
+        let eventPos = new PIXI.Vector(event.x, event.y)
+
+        if (newRail.p1.distanceTo(eventPos) <= 5) {
+            target = "1"
+        }
+
+        if (newRail.p2.distanceTo(eventPos) <= 5) {
+            target = "2"
+        }
+
+        newRail[`r${target}`] = createRail(
+            newRail[`p${target}`],
+            mousepos,
+            newRail,
+            undefined
+        )
+    })
+
+    return newRail
+}
+
+app.view.addEventListener("mousemove", (event) => {
+    mousepos.set(event.offsetX, event.offsetY)
+})
+
+app.view.addEventListener("mouseup", (event) => {
+    targetRail.p2 = mousepos.clone()
+    targetRail = false
+})
+
+app.ticker.add((t) => {
     rails.forEach(element => {
         element.draw()
     });
-}
+})
 
-function mousemove(event) {
-    mousepos.set(
-        event.clientX-screen.getBoundingClientRect().left, 
-        event.clientY-screen.getBoundingClientRect().top
-    )
-}
-
-function mousedown(event) {
-    if (!window.target) {
-        cars.forEach(element => {
-            element.draw(carDT)
-        })
-
-        return
-    }
-    keydown = true
-
-    let newRail = new Rail(
-        window.target["p" + window.targetType[1]], 
-        mousepos,
-        window.target,
-        undefined,
-        two
-    )
-    console.log(newRail)
-    window.target[window.targetType] = newRail
-    rails.push(newRail)
-    console.log(window.target[window.targetType] === newRail)
-
-    window.target = false
-    window.targetType = ""
-}
-
-function mouseup(event) {
-    if (keydown) {
-        rails[rails.length-1].p2 = mousepos.clone()
-        
-    }
-
-    keydown = false
-}
-
-function end(event) {
-    if (keydown) {
-        rails[rails.length-1].p2 = mousepos.clone()
-    }
-
-    keydown = false
-}
+createRail(
+    new PIXI.Vector(10, 100),
+    new PIXI.Vector(100, 100),
+    undefined,
+    undefined
+)
