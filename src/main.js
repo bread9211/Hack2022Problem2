@@ -42,7 +42,7 @@ let car = new Car(
 )
 setTimeout(() => {
     cars.push(car)
-}, 10000)
+}, 5000)
 
 function resize() {
     two.scene.position.set(0, 0)
@@ -50,6 +50,10 @@ function resize() {
 
 function update(frame, dt) {
     carDT = dt
+
+    cars.forEach(element => {
+        element.draw(carDT)
+    })
 
     rails.forEach(element => {
         element.draw()

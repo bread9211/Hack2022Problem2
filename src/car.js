@@ -87,7 +87,7 @@ class Car {
         
                     this.rail = currentRail
 
-                    console.log("among")
+                    this.railLength = Two.Vector.distanceBetween(this.rail.p1, this.rail.p2)
     
                     return
                 } else {
