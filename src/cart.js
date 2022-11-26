@@ -10,11 +10,10 @@ export default class Cart {
 
         this.physicsBody = Matter.Bodies.circle(pos.x, pos.y, 5, {}, 360)
         this.physicsBody.rail = this.rail
+        this.physicsBody.collisionFilter.category = 0x0001
+        this.physicsBody.collisionFilter.mask = 0x0002
 
         this.detector = Matter.Detector.create()
-
-        this.constraint = Matter.Constraint.create({
-        })
 
         window.app.stage.addChild(this.sprite)
 
@@ -30,25 +29,36 @@ export default class Cart {
 
         if (this.rail !== undefined) {
             if (this.rail.r2 !== undefined && this.rail.r2?.physicsBody !== undefined) {
+                this.rail.r2.physicsBody.collisionFilter.category = 0x0002
                 Matter.Detector.setBodies(this.detector, [this.physicsBody, this.rail.r2.physicsBody])
 
                 let collisions = Matter.Detector.collisions(this.detector)
 
                 if (collisions.length > 0) {
+                    if (this.rail.r1 !== undefined && this.rail.r1?.physicsBody !== undefined) {
+                        this.rail.r1.physicsBody.collisionFilter.category = 0x0004
+                    }
+
                     this.rail = this.rail.r2
                 }
             }
 
             if (this.rail.r1 !== undefined && this.rail.r1?.physicsBody !== undefined) {
+                this.rail.r2.physicsBody.collisionFilter.category = 0x0002
                 Matter.Detector.setBodies(this.detector, [this.physicsBody, this.rail.r1.physicsBody])
 
                 let collisions = Matter.Detector.collisions(this.detector)
 
                 if (collisions.length > 0) {
+                    if (this.rail.r2 !== undefined && this.rail.r2?.physicsBody !== undefined) {
+                        this.rail.r2.physicsBody.collisionFilter.category = 0x0004
+                    }
+
                     this.rail = this.rail.r1
                 }
             }
 
+            this.rail.physicsBody.collisionFilter.category = 0x0002
             this.sprite.angle = this.rail.sprite.angle
         }
     }

@@ -83,6 +83,7 @@ export default class Rail {
             isStatic : true,
             angle : angle
         })
+        this.physicsBody.collisionFilter.category = 0x0004
 
         this.railLength = this.p1.distanceTo(this.p2)
 
