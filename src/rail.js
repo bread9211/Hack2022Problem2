@@ -73,6 +73,22 @@ export default class Rail {
         })
     }
 
+    createPhysics() {
+        let diff = this.p2.clone().sub(this.p1)
+        let angle = (Math.atan(diff.y/diff.x) * 180)/Math.PI
+        if (Math.sign(diff.x) === -1) {angle += 180}
+        angle = angle*Math.PI/180
+
+        this.physicsBody = Matter.Bodies.rectangle((this.p1.x+this.p2.x)/2, (this.p1.y+this.p2.y)/2, this.p1.distanceTo(this.p2), 10, {
+            isStatic : true,
+            angle : angle
+        })
+
+        this.railLength = this.p1.distanceTo(this.p2)
+
+        Matter.Composite.add(window.engine.world, this.physicsBody)
+    }
+
     draw() {
         let diff = this.p2.clone().sub(this.p1)
         this.sprite.width = this.p1.distanceTo(this.p2)
