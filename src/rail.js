@@ -79,13 +79,16 @@ export default class Rail {
         if (Math.sign(diff.x) === -1) {angle += 180}
         angle = angle*Math.PI/180
 
-        this.physicsBody = Matter.Bodies.rectangle((this.p1.x+this.p2.x)/2, (this.p1.y+this.p2.y)/2, this.p1.distanceTo(this.p2), 10, {
+        this.physicsBody = Matter.Bodies.rectangle((this.p1.x+this.p2.x)/2, (this.p1.y+this.p2.y)/2, this.p1.distanceTo(this.p2)+10, 10, {
             isStatic : true,
-            angle : angle
+            angle : angle,
+            chamfer : {radius: [5, 5, 5, 5]}
         })
         this.physicsBody.collisionFilter.category = 0x0004
 
         this.railLength = this.p1.distanceTo(this.p2)
+
+        window.physicsBodies.push(this.physicsBody)
 
         Matter.Composite.add(window.engine.world, this.physicsBody)
     }
