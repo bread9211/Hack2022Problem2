@@ -16,11 +16,15 @@ export default class Cart {
         this.constraintBody = Matter.Bodies.circle(0, 110, 5, {}, 360)
         this.constraintBody.collisionFilter.category = 0x0001
         this.constraintBody.collisionFilter.mask = 0x0002
+        // Matter.Body.setMass(this.constraintBody, 0.00001)
 
         this.constraint = Matter.Constraint.create({
             bodyA : this.physicsBody,
             bodyB : this.constraintBody,
+            damping : 0.1
         })
+        this.constraint.length = 20
+        console.log(this.constraint.length)
 
         this.detector = Matter.Detector.create()
 
