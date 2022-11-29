@@ -5,7 +5,7 @@ let div = document.getElementById("canvas")
 let app = window.app = new PIXI.Application({
     autoStart : true,
     background : 0xffffff,
-    resizeTo : canvas
+    resizeTo : div
 })
 div.appendChild(app.view);
 
